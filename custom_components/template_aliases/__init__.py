@@ -1,10 +1,23 @@
-from homeassistant.helpers.template import (
-    TemplateEnvironment, _ENVIRONMENT, _ENVIRONMENT_LIMITED, _ENVIRONMENT_STRICT,
-)
-from .aliases import AliasExtension
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "template_aliases"
 _PATCHED = False
+
+# Everything imported here is private core API and may vanish in any HA
+# release. If that happens, setup must fail with a clear log message
+# instead of taking HA down with an ImportError.
+try:
+    from homeassistant.helpers.template import (
+        TemplateEnvironment, _ENVIRONMENT, _ENVIRONMENT_LIMITED, _ENVIRONMENT_STRICT,
+    )
+    from .aliases import AliasExtension
+except ImportError:
+    _LOGGER.exception("Private core template API changed, %s is disabled", DOMAIN)
+    _IMPORTS_OK = False
+else:
+    _IMPORTS_OK = True
 
 def _install(hass):
     global _PATCHED
@@ -23,6 +36,8 @@ def _install(hass):
         _PATCHED = True
 
 async def async_setup(hass, config):
+    if not _IMPORTS_OK:
+        return False
     _install(hass)
     return True
 
