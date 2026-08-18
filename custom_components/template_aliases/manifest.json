@@ -1,0 +1,10 @@
+{
+  "domain": "template_aliases",
+  "name": "Template aliases() function",
+  "codeowners": ["@b-uwe"],
+  "documentation": "https://github.com/b-uwe/HA-aliases-template-function",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/b-uwe/HA-aliases-template-function/issues",
+  "requirements": [],
+  "version": "0.0.1"
+}
