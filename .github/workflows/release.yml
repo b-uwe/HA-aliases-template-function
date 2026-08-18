@@ -1,0 +1,31 @@
+name: Release on version bump
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - custom_components/template_aliases/manifest.json
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from manifest
+        id: version
+        run: echo "version=$(jq -r .version custom_components/template_aliases/manifest.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Create release if tag does not exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "$TAG already released, nothing to do"
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes
+          fi
