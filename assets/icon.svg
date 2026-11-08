@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Jinja curly braces -->
+  <path d="M 80 40 C 60 40, 54 54, 54 72 L 54 106 C 54 119, 47 125, 34 128 C 47 131, 54 137, 54 150 L 54 184 C 54 202, 60 216, 80 216" fill="none" stroke="#18BCF2" stroke-width="16" stroke-linecap="round"/>
+  <path d="M 176 40 C 196 40, 202 54, 202 72 L 202 106 C 202 119, 209 125, 222 128 C 209 131, 202 137, 202 150 L 202 184 C 202 202, 196 216, 176 216" fill="none" stroke="#18BCF2" stroke-width="16" stroke-linecap="round"/>
+  <!-- alt-route: one origin, the name plus two dotted aliases -->
+  <circle cx="94" cy="118" r="9" fill="#FFB300"/>
+  <path d="M 94 118 C 116 118, 112 74, 144 72" fill="none" stroke="#FFB300" stroke-width="12" stroke-linecap="round"/>
+  <g fill="#FFB300">
+    <circle cx="117" cy="127" r="6"/>
+    <circle cx="129" cy="134" r="6"/>
+    <circle cx="139" cy="139" r="6"/>
+    <circle cx="107" cy="136" r="6"/>
+    <circle cx="113" cy="152" r="6"/>
+    <circle cx="120" cy="167" r="6"/>
+    <circle cx="129" cy="179" r="6"/>
+    <circle cx="140" cy="185" r="6"/>
+  </g>
+  <polygon points="146,58 168,72 146,86" fill="#FFB300"/>
+  <polygon points="146,126 168,140 146,154" fill="#FFB300"/>
+  <polygon points="146,172 168,186 146,200" fill="#FFB300"/>
+</svg>
