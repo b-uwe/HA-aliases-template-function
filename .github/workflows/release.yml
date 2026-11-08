@@ -14,6 +14,13 @@ permissions:
   contents: write
   actions: read
 
+# Test and Validate finishing both fire this workflow for the same commit.
+# Serialize those runs per commit so the second one sees the tag already exists
+# and skips cleanly, instead of racing a duplicate "gh release create".
+concurrency:
+  group: release-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
 jobs:
   release:
     # Only for the push that landed on main, and only if the triggering run was green.
@@ -27,13 +34,25 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
-      - name: Gate — require Test AND Validate green for this commit
+      - name: Gate — version bump AND both checks green for this commit
         id: gate
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           ok=true
+
+          # 1. This commit must actually change the manifest (the version bump).
+          #    Replaces the old `paths:` filter; the API diff handles squash merges.
+          if gh api "repos/$GITHUB_REPOSITORY/commits/$SHA" --jq '.files[].filename' \
+             | grep -qx 'custom_components/template_aliases/manifest.json'; then
+            echo "manifest.json changed in $SHA"
+          else
+            echo "manifest.json not changed in $SHA -> no release"
+            ok=false
+          fi
+
+          # 2. Both Test and Validate must be green for this exact commit.
           for wf in test.yml validate.yml; do
             concl=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$wf" \
               --commit "$SHA" --event push --limit 1 \
@@ -41,6 +60,7 @@ jobs:
             echo "$wf -> ${concl:-<none>}"
             [ "$concl" = "success" ] || ok=false
           done
+
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
 
       - name: Read version from manifest
