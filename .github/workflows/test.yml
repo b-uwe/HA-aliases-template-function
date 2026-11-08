@@ -14,13 +14,18 @@ on:
 
 jobs:
   pytest:
-    name: Pytest
+    name: Pytest (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.13 covers HA 2025.12–2026.2 (the hacs.json floor), 3.14 covers 2026.3+.
+        python-version: ["3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
       - name: Install test dependencies
         run: pip install -r requirements_test.txt
       - name: Run tests
