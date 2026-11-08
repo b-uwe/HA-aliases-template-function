@@ -1,0 +1,24 @@
+# Test dependencies for the template_aliases integration.
+#
+# Install ONLY into a project-local virtual environment (.venv) — never into
+# system or global Python, and never with --break-system-packages / --user / sudo.
+#
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -r requirements_test.txt
+#   python -m pytest tests/ -v        # run from the repo root
+#
+# pytest-homeassistant-custom-component bundles a matching Home Assistant and
+# provides pytest, pytest-asyncio and the `hass`/`enable_custom_integrations`
+# fixtures.
+#
+# Lower floor: 0.13.298 is the first release that bundles Home Assistant
+# 2025.12.0, matching hacs.json ("homeassistant": "2025.12.0"). That build has
+# the template-extensions API (homeassistant.helpers.template.extensions.base)
+# this integration relies on.
+#
+# No upper cap on purpose: a speculative cap would turn future, likely-working
+# releases red for no real defect. The suite leans on private core API, so CI
+# should PIN a known-good version (e.g. 0.13.298) and may additionally run the
+# latest so a genuine break surfaces as a real failure to investigate.
+pytest-homeassistant-custom-component>=0.13.298

@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Weekly early-warning run. requirements_test.txt pins a lower floor but
+  # no upper cap, so this installs the latest pytest-homeassistant-custom-component
+  # (which tracks the latest HA release). A breaking change in the private
+  # core template API therefore turns this run red even when the repo is idle.
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    name: Pytest (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.13 covers HA 2025.12–2026.2 (the hacs.json floor), 3.14 covers 2026.3+.
+        python-version: ["3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test dependencies
+        run: pip install -r requirements_test.txt
+      - name: Run tests
+        run: pytest tests/ -v
