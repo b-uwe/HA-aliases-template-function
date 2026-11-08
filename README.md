@@ -12,6 +12,13 @@ floor — a sibling of the existing labels() function.
 {{ aliases(area_id('Garage'), 'area') }}   → ['Workshop']
 ```
 
+## Installation
+
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=b-uwe&repository=HA-aliases-template-function&category=integration)
+
+Install via [HACS](https://hacs.xyz/), then add the integration from
+**Settings → Devices & services → Add integration → Template aliases()**.
+
 Aliases are a first-class registry field on entities, areas, and floors, and they are already
 user-facing: Assist uses them to match spoken/typed alternate names. But they are readable
 **everywhere except from a template**. Core already exposes the neighbouring registry
